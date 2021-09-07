@@ -1,14 +1,18 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
     // create alarms after extension is instaled / upraded
-    // scheduleRequest();
+    scheduleRequest();
     // scheduleWhatchLog();
     // startRequest();
     chrome.alarms.clear('watchlog')
+    chrome.alarms.getAll(alarms => console.log(alarms))
 })
+
 function onCleaAlarm(wasCleared) {
     console.log(wasCleared)
 }
+let commentsStore = [];
+
 chrome.runtime.onStartup.addListener(() => {
     //  fetch and save data when chrome restarted    
     console.log('onStartup');
@@ -19,7 +23,6 @@ chrome.runtime.onSuspend.addListener(() => {
     chrome.alarms.clearAll('watchlog', 'refresh')
 })
 
-console.log('background is runnig');
 chrome.browserAction.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tab.id, { text: 'hello' })
     console.log('background btn action')
@@ -27,11 +30,17 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'getPost') {
-        console.log('you need to save data to postStore')
+        sendResponse('you need to save data to postStore')
+    }
+    if (request.type === 'post-user-data') {
+        console.log('post-user-data equal to', request)
+        sendResponse()
     }
 })
 
-
+chrome.alarms.onAlarm.addListener(alarms => {
+    (alarms && alarms.name === 'fetch_comments') ? startRequest() : console.log('does not working')
+})
 // chrome.alarms.onAlarm.addListener(alarm => {
 //     if (alarm && alarm.name === 'watchlog') {
 //         chrome.alarms.get('refresh', alarm => {
@@ -51,8 +60,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // })
 
 function scheduleRequest() {
-    console.log('schedule request alarm to 3 minutes');
-    chrome.alarms.create('watchlog', { periodInMinutes: 3 });
+    console.log('schedule etch_comments - delayInMinutes: 0.1');
+    chrome.alarms.create('fetch_comments', { delayInMinutes: 0.1 });
 }
 
 // schedule a whatchlog check every 2mins
@@ -63,9 +72,14 @@ function scheduleWhatchLog() {
 
 // fetch data and save to local storage
 async function startRequest() {
-    console.log('start Fetch request...')
+    console.log('start Fetch request...');
     let url = 'https://jsonplaceholder.typicode.com/comments';
-    await fetch(url)
-        .then(responce => responce.json())
-        .then(json => console.log(json))
+    const response = await fetch(url);
+    const data = await response.json();
+    addData(data);
+}
+
+function addData(comments){
+    postStore = comments;
+    console.log(postStore)
 }

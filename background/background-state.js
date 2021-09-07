@@ -1,1 +1,1 @@
-const postStore = new Array;
+let postStore;
