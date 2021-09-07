@@ -1,17 +1,16 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
     // create alarms after extension is instaled / upraded
-    scheduleRequest();
     // scheduleWhatchLog();
     // startRequest();
-    chrome.alarms.clear('watchlog')
-    chrome.alarms.getAll(alarms => console.log(alarms))
+    // chrome.alarms.clear('watchlog')
+    chrome.alarms.getAll(alarms => console.log('I want see all exiting alarms', alarms))
 })
 
 function onCleaAlarm(wasCleared) {
     console.log(wasCleared)
 }
-let commentsStore = [];
+// let commentsStore = [];
 
 chrome.runtime.onStartup.addListener(() => {
     //  fetch and save data when chrome restarted    
@@ -20,7 +19,7 @@ chrome.runtime.onStartup.addListener(() => {
 })
 
 chrome.runtime.onSuspend.addListener(() => {
-    chrome.alarms.clearAll('watchlog', 'refresh')
+    // chrome.alarms.clearAll('watchlog', 'refresh')
 })
 
 chrome.browserAction.onClicked.addListener((tab) => {
@@ -34,7 +33,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     if (request.type === 'post-user-data') {
         console.log('post-user-data equal to', request)
-        sendResponse()
+        scheduleRequest();
+        sendResponse({ action: 'got_user_data' })
     }
 })
 
@@ -60,7 +60,7 @@ chrome.alarms.onAlarm.addListener(alarms => {
 // })
 
 function scheduleRequest() {
-    console.log('schedule etch_comments - delayInMinutes: 0.1');
+    console.log('schedule fetch_comments - delayInMinutes: 0.1');
     chrome.alarms.create('fetch_comments', { delayInMinutes: 0.1 });
 }
 
@@ -79,7 +79,7 @@ async function startRequest() {
     addData(data);
 }
 
-function addData(comments){
+function addData(comments) {
     postStore = comments;
     console.log(postStore)
 }
