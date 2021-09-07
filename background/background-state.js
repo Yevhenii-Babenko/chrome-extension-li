@@ -1,0 +1,1 @@
+const postStore = new Array;
