@@ -1,15 +1,18 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
     // create alarms after extension is instaled / upraded
-    scheduleRequest();
-    scheduleWhatchLog();
-    startRequest();
+    // scheduleRequest();
+    // scheduleWhatchLog();
+    // startRequest();
+    chrome.alarms.clear('watchlog')
 })
-
+function onCleaAlarm(wasCleared) {
+    console.log(wasCleared)
+}
 chrome.runtime.onStartup.addListener(() => {
     //  fetch and save data when chrome restarted    
     console.log('onStartup');
-    startRequest();
+    // startRequest();
 })
 
 chrome.runtime.onSuspend.addListener(() => {
@@ -29,23 +32,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 
-chrome.alarms.onAlarm.addListener(alarm => {
-    if (alarm && alarm.name === 'watchlog') {
-        chrome.alarms.get('refresh', alarm => {
-            if (alarm) {
-                console.log('refresh alarm exists')
-            } else {
-                // if it is not there, sratt a new request and reschedule refresh alarm
-                console.log('refresh alarm doesn not exist, start a ne alerm')
-                startRequest();
-                scheduleRequest();
-            }
-        })
-    } else {
-        // if refresh alarm triggered, start a new request
-        startRequest();
-    }
-})
+// chrome.alarms.onAlarm.addListener(alarm => {
+//     if (alarm && alarm.name === 'watchlog') {
+//         chrome.alarms.get('refresh', alarm => {
+//             if (alarm) {
+//                 console.log('refresh alarm exists')
+//             } else {
+//                 // if it is not there, sratt a new request and reschedule refresh alarm
+//                 console.log('refresh alarm doesn not exist, start a ne alerm')
+//                 startRequest();
+//                 scheduleRequest();
+//             }
+//         })
+//     } else {
+//         // if refresh alarm triggered, start a new request
+//         startRequest();
+//     }
+// })
 
 function scheduleRequest() {
     console.log('schedule request alarm to 3 minutes');
