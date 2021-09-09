@@ -27,14 +27,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponce) => {
     }))
   })
 
-  function setUpAlarm() {
-    chrome.alarms.create('onResponceAlarm', { delayInMinutes: 0.1 })
-  }
-  chrome.alarms.addEventListener(alarms => {
-    if (alarms && alarms.name === 'onResponceAlarm') {
-      console.log('onResponceAlarm works - tada!')
-    }
-  })
+  // Content script doesn't have access to Alarms API => use messaging to bg.js to fire alarm
+  // function setUpAlarm() {
+  //   chrome.alarms.create('onResponceAlarm', { delayInMinutes: 0.1 })
+  // }
+  // chrome.alarms.addEventListener(alarms => {
+  //   if (alarms && alarms.name === 'onResponceAlarm') {
+  //     console.log('onResponceAlarm works - tada!')
+  //   }
+  // })
   function getUserLiByUrl(someFunction) {
     let cookiesLine = document.cookie;
     if (!cookiesLine) {

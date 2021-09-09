@@ -9,7 +9,7 @@ btn.addEventListener('click', () => {
     chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
         console.log('current tab is: ', tabs[0])
         const currentTab = tabs[0];
-        chrome.tabs.sendMessage(currentTab.id, { type: 'sendRequest' }, (response) => console.log('this is a responce on tab mess', response))
+        chrome.tabs.sendMessage(currentTab.id, { type: 'sendRequest' })
     })
 })
 

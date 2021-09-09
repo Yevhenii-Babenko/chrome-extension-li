@@ -16,16 +16,16 @@
                 "*://*.linkedin.com/*"
             ],
             "js": [
-                "content/content.js",
-                "lib/jquery.js"
+                "jquery.js",
+                "content/content.js"
             ]
         }
     ],
     "background": {
         "scripts": [
+            "jquery.js",
             "background/background.js",
-            "background/background-state.js",
-            "lib/jquery.js"
+            "background/background-state.js"
         ],
         "persistent": false
     },
