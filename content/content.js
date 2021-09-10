@@ -1,5 +1,6 @@
 
 console.log('content script works')
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (sendResponse.action === 'got_user_data') {
     console.log('got_user_data', true)
