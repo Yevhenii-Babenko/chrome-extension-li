@@ -1,16 +1,32 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
-    setBusyTimeout(getAllUser, defaultTimeTnterval)
+    // setBusyTimeout(getAllUser, defaultTimeTnterval)
+    chrome.tabs.getAllInWindow(null, function(tabs) {
+        // console.log('getAllInWindow', tabs)
+        for(let i = 0; i < tabs.length; i++) {
+
+            let url = tabs[i].url;
+  
+            if (url.indexOf("linkedin") !== -1) {
+                console.log(url)
+                chrome.tabs.update(tabs[i].id, {url: tabs[i].url});
+            }
+        }
+    })
+    
+    // query({active: true, currentWindow: true}, function(tabs){
+    //     console.log(tabs);
+    // });
 })
 
 chrome.runtime.onStartup.addListener(function () {
     console.log('bg onStartup...');
-    setBusyTimeout(getAllUser, defaultTimeTnterval);
+    // setBusyTimeout(getAllUser, defaultTimeTnterval);
 })
 
 chrome.runtime.onSuspend.addListener(function() {
     alert("Unloading...");
-    clearTimeout(setBusyTimeout)
+    // clearTimeout(setBusyTimeout)
 })
 
 var SAFE_DELAY = 1000; // Guaranteed not to fall asleep in this interval
@@ -36,7 +52,7 @@ const url = 'https://jsonplaceholder.typicode.com';
 const defaultTimeTnterval = 5000;
 $(function () {
     // setInterval(startRequest, 40000)
-    //setInterval(getAllUser, 20000)
+    // setInterval(getAllUser, 20000)
 })
 
 function getAllUser() {
@@ -114,10 +130,15 @@ function patchUserInfo(userData){
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        console.log(request)
+        console.log(sender.tab ?
+            "from a content script:" + sender.tab.url :
+            "from the extension")
+        //let tabId = sender.tab.id
         if (request.type === "post-user-data")
             getUserProfileData(request.candidateData)
-          sendResponse({responceFromBg: "got_your_message"});
+            sendResponse()
+            //chrome.tabs.sendMessage(tabId, {responceFromBg: "got_your_message"})
+          //sendResponse({responceFromBg: "got_your_message"});
       }
 )
 

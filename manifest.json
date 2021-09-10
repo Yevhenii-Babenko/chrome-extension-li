@@ -17,7 +17,8 @@
             ],
             "js": [
                 "jquery.js",
-                "content/content.js"
+                "content/content.js",
+                "content/liUserPage.js"
             ]
         }
     ],
