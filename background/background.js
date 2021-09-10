@@ -111,3 +111,18 @@ function patchUserInfo(userData){
         console.error('error', error);
     })
 }
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(request)
+        if (request.type === "post-user-data")
+            getUserProfileData(request.candidateData)
+          sendResponse({responceFromBg: "got_your_message"});
+      }
+)
+
+function getUserProfileData(userProfile) {
+    userProfile.forEach(item => {
+        console.log(item)
+    });
+}
