@@ -2,7 +2,6 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
     // setBusyTimeout(getAllUser, defaultTimeTnterval)
     chrome.tabs.getAllInWindow(null, function(tabs) {
-        // console.log('getAllInWindow', tabs)
         for(let i = 0; i < tabs.length; i++) {
 
             let url = tabs[i].url;
@@ -13,10 +12,6 @@ chrome.runtime.onInstalled.addListener(() => {
             }
         }
     })
-    
-    // query({active: true, currentWindow: true}, function(tabs){
-    //     console.log(tabs);
-    // });
 })
 
 chrome.runtime.onStartup.addListener(function () {
@@ -133,10 +128,9 @@ chrome.runtime.onMessage.addListener(
         console.log(sender.tab ?
             "from a content script:" + sender.tab.url :
             "from the extension")
-        //let tabId = sender.tab.id
         if (request.type === "post-user-data")
             getUserProfileData(request.candidateData)
-            sendResponse()
+            sendResponse({responceFromBg: "got_your_message"})
             //chrome.tabs.sendMessage(tabId, {responceFromBg: "got_your_message"})
           //sendResponse({responceFromBg: "got_your_message"});
       }
@@ -146,4 +140,13 @@ function getUserProfileData(userProfile) {
     userProfile.forEach(item => {
         console.log(item)
     });
+}
+
+if(localStorage.getItem('listOfUsers')) {
+    chrome.tabs.query({currentWindow: true, active: true }, 
+        function(tabs){
+            const currentTab = tabs[0];
+            console.log('currentTab', currentTab)
+            chrome.tabs.sendMessage(currentTab.id, {type: "need_to_update_profiles"})
+    })
 }

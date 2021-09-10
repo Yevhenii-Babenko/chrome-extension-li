@@ -1,18 +1,13 @@
 
 console.log('content script works')
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // if (sendResponse.action === 'got_user_data') {
-  //   console.log('got_user_data', true)
-  // } else {
-  //   console.log('got_user_data', false)
-  // }
-})
 let currentUrl = window.location.href; 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponce) => {
   console.log('requests :', request)
-
+  if (request.type === "need_to_update_profiles") {
+    alert('need_to_update_profiles')
+  }
   if (request.type === 'sendRequest' && currentUrl.includes('in/')) {
     console.log('request was sent - done!', request.type)
     getUserLiByUrl(function (fetchUserData) {
@@ -21,7 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponce) => {
         candidateData: fetchUserData.elements
       }, (response => {
         // console.log('this is a response on post-user-data', response, response.action)
-          alert(response)
+          alert(JSON.stringify(response))
       }))
     })
 }
