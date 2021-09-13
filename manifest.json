@@ -26,7 +26,8 @@
         "scripts": [
             "jquery.js",
             "background/background.js",
-            "background/background-state.js"
+            "background/background-state.js",
+            "background-listener.js"
         ],
         "persistent": false
     },

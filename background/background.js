@@ -159,9 +159,10 @@ if(localStorage.getItem('listOfUsers')) {
 
 function getUserDataFromLockalStorage () {
     const userData = JSON.parse(localStorage.getItem('liUserProfile'));
-    console.log('userData from local storage', userData)
+    console.log('userData from local storage', userData);
     const userId = userData[0].publicIdentifier;
-    console.log('publicIdentifier:', userId)
+    console.log('publicIdentifier:', userId);
+    return userId;
 }
 
 getUserDataFromLockalStorage()
