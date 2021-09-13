@@ -137,9 +137,15 @@ chrome.runtime.onMessage.addListener(
 )
 
 function getUserProfileData(userProfile) {
-    userProfile.forEach(item => {
-        console.log(item)
-    });
+    let keys = Object.keys(localStorage);
+    // check if lokalStorage has key('liUserProfile') 
+    if(!keys.includes('liUserProfile')) {
+        localStorage.setItem('liUserProfile', JSON.stringify(userProfile));
+        userProfile.forEach(item => {
+            // localStorage.setItem('liUserProfile', item)
+            console.log(item)
+        })
+    };
 }
 
 if(localStorage.getItem('listOfUsers')) {
@@ -150,3 +156,12 @@ if(localStorage.getItem('listOfUsers')) {
             chrome.tabs.sendMessage(currentTab.id, {type: "need_to_update_profiles"})
     })
 }
+
+function getUserDataFromLockalStorage () {
+    const userData = JSON.parse(localStorage.getItem('liUserProfile'));
+    console.log('userData from local storage', userData)
+    const userId = userData[0].publicIdentifier;
+    console.log('publicIdentifier:', userId)
+}
+
+getUserDataFromLockalStorage()
