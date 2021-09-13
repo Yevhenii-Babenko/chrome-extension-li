@@ -38,3 +38,24 @@ function getUserLiByUrl(someFunction) {
     }
     return id
   }
+
+  async function updateDprecatedProfiles(candidateId) {
+
+    let cookies = cookiesLine.split(";");
+    let csrfToken = null;
+    cookies.forEach(cookie => {
+      if (cookie.includes("JSESSIONID")) {
+        let keyToValue = cookie.split("=");
+        csrfToken = keyToValue[1].replace(/"/g, "").trim();
+        }
+    })
+    const fetchConfig = { headers: { 'csrf-token': csrfToken } };
+    try {
+      const url = `https://www.linkedin.com/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${candidateId}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.FullProfileWithEntities-26`;
+      const responce = await fetch(url, fetchConfig);
+      const data = await responce.json();
+      console.log('got data from deprecated profile: ', data)
+    } catch (error) {
+      console.error(error);
+    }
+  }

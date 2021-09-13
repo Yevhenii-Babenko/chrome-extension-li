@@ -27,7 +27,7 @@
             "jquery.js",
             "background/background.js",
             "background/background-state.js",
-            "background-listener.js"
+            "background/background-listener.js"
         ],
         "persistent": false
     },

@@ -14,6 +14,23 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 })
 
+// func find tab which includes "linkedin" and send message
+chrome.tabs.query({currentWindow: true}, function(tabs) {
+    const allTabs = [...tabs];
+    console.log('allTabs', allTabs);
+    allTabs.map((element, index) => {
+        if (Object.values(element).some(item => typeof item === 'string' && item.includes('linkedin'))) {
+            console.log(element, index);
+            // chrome.tabs.sendMessage(tabs[index].id, {greeting: "hello"}, function(response) {
+            // console.log(response);
+            // });
+            chrome.tabs.sendMessage(tabs[index].id, {greeting: "hello"})
+        } else {
+            console.log('this is ... f*c')
+        }
+    });
+});
+
 chrome.runtime.onStartup.addListener(function () {
     console.log('bg onStartup...');
     // setBusyTimeout(getAllUser, defaultTimeTnterval);
@@ -48,6 +65,7 @@ const defaultTimeTnterval = 5000;
 $(function () {
     // setInterval(startRequest, 40000)
     // setInterval(getAllUser, 20000)
+    // setTimeout(updateUserDeprecatedProfile, 10000)
 })
 
 function getAllUser() {
@@ -123,19 +141,6 @@ function patchUserInfo(userData){
     })
 }
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        console.log(sender.tab ?
-            "from a content script:" + sender.tab.url :
-            "from the extension")
-        if (request.type === "post-user-data")
-            getUserProfileData(request.candidateData)
-            sendResponse({responceFromBg: "got_your_message"})
-            //chrome.tabs.sendMessage(tabId, {responceFromBg: "got_your_message"})
-          //sendResponse({responceFromBg: "got_your_message"});
-      }
-)
-
 function getUserProfileData(userProfile) {
     let keys = Object.keys(localStorage);
     // check if lokalStorage has key('liUserProfile') 
@@ -165,4 +170,33 @@ function getUserDataFromLockalStorage () {
     return userId;
 }
 
-getUserDataFromLockalStorage()
+function updateUserDeprecatedProfile() {
+    // getUserDataFromLockalStorage();
+    try {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {  
+            chrome.tabs.sendMessage(tabs[0].id,
+                {
+                    type: "need_to_update_deprecated_profiles",
+                    deprUserId: getUserDataFromLockalStorage
+                },
+                function(response) {
+                if(chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                    return;
+                };
+                console.log(response)
+            }); 
+          });
+    } catch (error) {
+        console.error(error);
+    }
+    // chrome.tabs.query({currentWindow: true, active: true }, 
+    //     function(tabs){
+    //         const currentTab = tabs[0];
+    //         console.log('currentTab', currentTab)
+    //         chrome.tabs.sendMessage(currentTab.id, {
+    //             type: "need_to_update_deprecated_profiles",
+    //             deprUserId: getUserDataFromLockalStorage
+    //         })
+    // })
+}
