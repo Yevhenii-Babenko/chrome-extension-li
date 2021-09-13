@@ -13,6 +13,10 @@ btn.addEventListener('click', () => {
     })
 })
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log(request)
+  })
+  
 function callback() {
     console.log('button was pressed')
 }

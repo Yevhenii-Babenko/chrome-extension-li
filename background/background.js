@@ -170,33 +170,33 @@ function getUserDataFromLockalStorage () {
     return userId;
 }
 
-function updateUserDeprecatedProfile() {
-    // getUserDataFromLockalStorage();
-    try {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {  
-            chrome.tabs.sendMessage(tabs[0].id,
-                {
-                    type: "need_to_update_deprecated_profiles",
-                    deprUserId: getUserDataFromLockalStorage
-                },
-                function(response) {
-                if(chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
-                    return;
-                };
-                console.log(response)
-            }); 
-          });
-    } catch (error) {
-        console.error(error);
-    }
-    // chrome.tabs.query({currentWindow: true, active: true }, 
-    //     function(tabs){
-    //         const currentTab = tabs[0];
-    //         console.log('currentTab', currentTab)
-    //         chrome.tabs.sendMessage(currentTab.id, {
-    //             type: "need_to_update_deprecated_profiles",
-    //             deprUserId: getUserDataFromLockalStorage
-    //         })
-    // })
-}
+// function updateUserDeprecatedProfile() {
+//     // getUserDataFromLockalStorage();
+//     try {
+//         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {  
+//             chrome.tabs.sendMessage(tabs[0].id,
+//                 {
+//                     type: "need_to_update_deprecated_profiles",
+//                     deprUserId: getUserDataFromLockalStorage
+//                 },
+//                 function(response) {
+//                 if(chrome.runtime.lastError) {
+//                     console.error(chrome.runtime.lastError.message);
+//                     return;
+//                 };
+//                 console.log(response)
+//             }); 
+//           });
+//     } catch (error) {
+//         console.error(error);
+//     }
+//     // chrome.tabs.query({currentWindow: true, active: true }, 
+//     //     function(tabs){
+//     //         const currentTab = tabs[0];
+//     //         console.log('currentTab', currentTab)
+//     //         chrome.tabs.sendMessage(currentTab.id, {
+//     //             type: "need_to_update_deprecated_profiles",
+//     //             deprUserId: getUserDataFromLockalStorage
+//     //         })
+//     // })
+// }
