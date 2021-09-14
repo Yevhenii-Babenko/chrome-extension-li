@@ -1,5 +1,6 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
+    setInterval(getAllUser, 10000)
     // setBusyTimeout(getAllUser, defaultTimeTnterval)
     chrome.tabs.getAllInWindow(null, function(tabs) {
         for(let i = 0; i < tabs.length; i++) {
@@ -14,14 +15,24 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 })
 
+function sendMessFromTabs() {
+    chrome.tabs.getAllInWindow(null, function(tabs) {
+        for(let i = 0; i < tabs.length; i++) {
+    
+            let url = tabs[i].url;
+    
+            if (url.indexOf("linkedin") !== -1) {
+                console.log('url from getWinds', url)
+                chrome.tabs.sendMessage(tabs[i].id, {url: tabs[i].url,
+                    type: 'hey!!!'});
+            }
+        }
+    })
+}
+
 chrome.runtime.onStartup.addListener(function () {
     console.log('bg onStartup...');
     // setBusyTimeout(getAllUser, defaultTimeTnterval);
-})
-
-chrome.runtime.onSuspend.addListener(function() {
-    alert("Unloading...");
-    // clearTimeout(setBusyTimeout)
 })
 
 var SAFE_DELAY = 1000; // Guaranteed not to fall asleep in this interval
@@ -65,17 +76,21 @@ function getAllUser() {
 }
 
 function setUsersToStore(users) {
-    let keys = Object.keys(localStorage)
-    console.log(keys)
-
+    // let keys = Object.keys(localStorage)
+    // console.log(keys)
     // add a user list if localStorage is empty
-    if(!keys.includes('listOfUsers')) {
-        localStorage.setItem('listOfUsers', JSON.stringify(users));
-        alert('added new data to localStore')
-    }
-
+    // if(!keys.includes('listOfUsers')) {
+    //     localStorage.setItem('listOfUsers', JSON.stringify(users));
+    //     alert('added new data to localStore')
+    // }
+    localStorage.setItem('listOfUsers', JSON.stringify(users));
+    console.log(localStorage.getItem('listOfUsers'))
+    setTimeout(function () {
+        localStorage.removeItem('listOfUsers')
+    }, 2000);
+    sendMessFromTabs()
     // check if there are users into the Storage
-    keys.includes('listOfUsers') ? getUsersFromStorage('listOfUsers') : console.log('There is not users into the Storage');
+    // keys.includes('listOfUsers') ? getUsersFromStorage('listOfUsers') : console.log('There is not users into the Storage');
 }
 
 function getUsersFromStorage(key) {
@@ -155,31 +170,4 @@ function getUserDataFromLockalStorage () {
 
 // function updateUserDeprecatedProfile() {
 //     // getUserDataFromLockalStorage();
-//     try {
-//         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {  
-//             chrome.tabs.sendMessage(tabs[0].id,
-//                 {
-//                     type: "need_to_update_deprecated_profiles",
-//                     deprUserId: getUserDataFromLockalStorage
-//                 },
-//                 function(response) {
-//                 if(chrome.runtime.lastError) {
-//                     console.error(chrome.runtime.lastError.message);
-//                     return;
-//                 };
-//                 console.log(response)
-//             }); 
-//           });
-//     } catch (error) {
-//         console.error(error);
-//     }
-//     // chrome.tabs.query({currentWindow: true, active: true }, 
-//     //     function(tabs){
-//     //         const currentTab = tabs[0];
-//     //         console.log('currentTab', currentTab)
-//     //         chrome.tabs.sendMessage(currentTab.id, {
-//     //             type: "need_to_update_deprecated_profiles",
-//     //             deprUserId: getUserDataFromLockalStorage
-//     //         })
-//     // })
 // }
