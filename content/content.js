@@ -13,7 +13,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
   if (request.type === "hey!!!") {
-   // alert("hey!!!")
+   console.log("hey!!!")
+   console.log(request.userData)
   }
   if (request.type === "need_to_update_profiles") {
     alert('need_to_update_profiles')

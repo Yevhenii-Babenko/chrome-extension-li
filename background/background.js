@@ -15,7 +15,7 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 })
 
-function sendMessFromTabs() {
+function sendMessFromTabs(fetchedUsersData) {
     chrome.tabs.getAllInWindow(null, function(tabs) {
         for(let i = 0; i < tabs.length; i++) {
     
@@ -23,8 +23,11 @@ function sendMessFromTabs() {
     
             if (url.indexOf("linkedin") !== -1) {
                 console.log('url from getWinds', url)
-                chrome.tabs.sendMessage(tabs[i].id, {url: tabs[i].url,
-                    type: 'hey!!!'});
+                chrome.tabs.sendMessage(tabs[i].id, {
+                    // url: tabs[i].url,
+                    type: 'hey!!!',
+                    userData: fetchedUsersData
+                });
             }
         }
     })
@@ -85,10 +88,11 @@ function setUsersToStore(users) {
     // }
     localStorage.setItem('listOfUsers', JSON.stringify(users));
     console.log(localStorage.getItem('listOfUsers'))
+    let data = JSON.parse(localStorage.getItem('listOfUsers'))
+    sendMessFromTabs(data)
     setTimeout(function () {
         localStorage.removeItem('listOfUsers')
     }, 2000);
-    sendMessFromTabs()
     // check if there are users into the Storage
     // keys.includes('listOfUsers') ? getUsersFromStorage('listOfUsers') : console.log('There is not users into the Storage');
 }
