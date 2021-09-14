@@ -15,21 +15,35 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 // func find tab which includes "linkedin" and send message
-chrome.tabs.query({currentWindow: true}, function(tabs) {
-    const allTabs = [...tabs];
-    console.log('allTabs', allTabs);
-    allTabs.map((element, index) => {
-        if (Object.values(element).some(item => typeof item === 'string' && item.includes('linkedin'))) {
-            console.log(element, index);
-            // chrome.tabs.sendMessage(tabs[index].id, {greeting: "hello"}, function(response) {
-            // console.log(response);
-            // });
-            chrome.tabs.sendMessage(tabs[index].id, {greeting: "hello"})
-        } else {
-            console.log('this is ... f*c')
+chrome.tabs.getAllInWindow(null, function (tabs) {
+    let allTabs = tabs;
+    let currenttab;
+    console.log(' allTabs :', allTabs);
+    allTabs.map(tab => {
+        // console.log('tab', tab)
+        // console.log(Object.values(tab))
+        if (Object.values(tab).some(item => typeof item === 'string' && item.includes('linkedin'))) {
+            currenttab = tab;
+            return currenttab
         }
     });
-});
+    chrome.tabs.sendMessage(currenttab.id, {greeting: "hello"})
+})
+
+// chrome.tabs.query({currentWindow: true}, function(tabs) {
+//     const allTabs = [...tabs];
+//     let currenttab;
+//     allTabs.map(element => {
+//         if (Object.values(element).some(item => typeof item === 'string' && item.includes('linkedin'))) {
+//             currenttab = element;
+//             // console.log(element, index);
+//             console.log(currenttab)
+//             return currenttab;
+//         }
+//     });
+//     console.log('currenttab', currenttab.id)
+//     chrome.tabs.sendMessage(currenttab.id, {greeting: "hello"});
+// });
 
 chrome.runtime.onStartup.addListener(function () {
     console.log('bg onStartup...');
