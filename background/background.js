@@ -26,8 +26,8 @@ function sendMessFromTabs() {
                 if (url.indexOf("linkedin") !== -1) {
                     console.log('url from getWinds', url)
                     chrome.tabs.sendMessage(tabs[i].id, {
-                        type: 'hey!!!',
-                        userData: fetchedUsersData
+                        type: 'retrieved_deprecated_userProfiles',
+                        deprecatedUserProfiles: fetchedUsersData
                     });
                 } else {
                     console.log('there no tab with linkedin')
