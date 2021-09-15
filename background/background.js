@@ -15,23 +15,26 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 })
 
-function sendMessFromTabs(fetchedUsersData) {
-    chrome.tabs.getAllInWindow(null, function(tabs) {
-        for(let i = 0; i < tabs.length; i++) {
-    
-            let url = tabs[i].url;
-    
-            if (url.indexOf("linkedin") !== -1) {
-                console.log('url from getWinds', url)
-                chrome.tabs.sendMessage(tabs[i].id, {
-                    type: 'hey!!!',
-                    userData: fetchedUsersData
-                });
-            } else {
-                console.log('there no tab with linkedin')
+function sendMessFromTabs() {
+    if (localStorage.length !== 0 && localStorage.key('liUserProfile')) {
+        const fetchedUsersData = JSON.parse(localStorage.getItem('liUserProfile'))
+        chrome.tabs.getAllInWindow(null, function(tabs) {
+            for(let i = 0; i < tabs.length; i++) {
+        
+                let url = tabs[i].url;
+        
+                if (url.indexOf("linkedin") !== -1) {
+                    console.log('url from getWinds', url)
+                    chrome.tabs.sendMessage(tabs[i].id, {
+                        type: 'hey!!!',
+                        userData: fetchedUsersData
+                    });
+                } else {
+                    console.log('there no tab with linkedin')
+                }
             }
-        }
-    })
+        })
+    }
 }
 
 chrome.runtime.onStartup.addListener(function () {
@@ -61,13 +64,13 @@ const url = 'https://jsonplaceholder.typicode.com';
 
 const defaultTimeTnterval = 5000;
 $(function () {
+    setInterval(sendMessFromTabs, 20000)
     // setInterval(startRequest, 40000)
     // setInterval(getAllUser, 20000)
     // setTimeout(updateUserDeprecatedProfile, 10000)
 })
 
 function getAllUser() {
-    // getLinkedinUserData();
     fetch(url + '/users')
         .then(function (response){
             return response.json()
@@ -91,12 +94,7 @@ function setUsersToStore(users) {
         localStorage.setItem('listOfUsers', addUsers)
     }
     let data = JSON.parse(localStorage.getItem('listOfUsers'))
-    // sendMessFromTabs(data)
-    // setTimeout(function () {
-    //     localStorage.removeItem('listOfUsers')
-    // }, 2000);
-    // check if there are users into the Storage
-    // keys.includes('listOfUsers') ? getUsersFromStorage('listOfUsers') : console.log('There is not users into the Storage');
+    console.log('data:', data)
 }
 
 function getUsersFromStorage(key) {
