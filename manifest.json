@@ -23,7 +23,6 @@
         }
     ],
     "background": {
-        "page": "background.html",
         "scripts": [
             "jquery.js",
             "background/background.js",
@@ -39,5 +38,5 @@
         "alarms",
         "storage"
     ],
-    "content_security_policy": "script-src 'self' https://*.linkedin.com/* https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://www.googletagmanager.com; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://*.linkedin.com/*; object-src 'self'"
 }
