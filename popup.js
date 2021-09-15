@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Page loaded')
 })
 
-const btn = document.getElementById('checkPage');
+const btn = document.getElementById('getCandidate');
 btn.addEventListener('click', callback);
 
 btn.addEventListener('click', () => {

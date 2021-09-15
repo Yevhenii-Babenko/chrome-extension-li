@@ -1,5 +1,6 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
+    sendMessFromTabs()
     // setInterval(getAllUser, 60000)
     // setBusyTimeout(getAllUser, defaultTimeTnterval)
     chrome.tabs.getAllInWindow(null, function(tabs) {
@@ -14,6 +15,12 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     })
 })
+
+chrome.runtime.onSuspend.addListener()
+function onSuspend () {
+    alert('Uploading');
+    sendMessFromTabs();
+}
 
 function sendMessFromTabs() {
     if (localStorage.length !== 0 && localStorage.key('liUserProfile')) {
