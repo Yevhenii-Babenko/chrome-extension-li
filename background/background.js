@@ -1,6 +1,6 @@
 chrome.runtime.onInstalled.addListener(() => {
     console.log('bg onInstaled...')
-    setInterval(getAllUser, 60000)
+    // setInterval(getAllUser, 60000)
     // setBusyTimeout(getAllUser, defaultTimeTnterval)
     chrome.tabs.getAllInWindow(null, function(tabs) {
         for(let i = 0; i < tabs.length; i++) {
@@ -81,20 +81,20 @@ function getAllUser() {
 }
 
 function setUsersToStore(users) {
-    // let keys = Object.keys(localStorage)
-    // console.log(keys)
-    // add a user list if localStorage is empty
-    // if(!keys.includes('listOfUsers')) {
-    //     localStorage.setItem('listOfUsers', JSON.stringify(users));
-    //     alert('added new data to localStore')
-    // }
-    localStorage.setItem('listOfUsers', JSON.stringify(users));
-    console.log(localStorage.getItem('listOfUsers'))
+    let keys = Object.keys(localStorage)
+    if(!keys.includes('listOfUsers')) {
+        localStorage.setItem('listOfUsers', JSON.stringify(users));
+        console.log('listOfUsers');
+    } else {
+        const previousUsers = JSON.parse(localStorage.getItem('listOfUsers'));
+        const addUsers = [...previousUsers, users];
+        localStorage.setItem('listOfUsers', addUsers)
+    }
     let data = JSON.parse(localStorage.getItem('listOfUsers'))
-    sendMessFromTabs(data)
-    setTimeout(function () {
-        localStorage.removeItem('listOfUsers')
-    }, 2000);
+    // sendMessFromTabs(data)
+    // setTimeout(function () {
+    //     localStorage.removeItem('listOfUsers')
+    // }, 2000);
     // check if there are users into the Storage
     // keys.includes('listOfUsers') ? getUsersFromStorage('listOfUsers') : console.log('There is not users into the Storage');
 }
@@ -123,7 +123,7 @@ function getSingleUser(userId) {
 function patchUserInfo(userData){
     console.log('this is from patchUserInfo', userData)
     const id = userData.id
-    // console.log(userData.name, userData.username)
+
     fetch(`${url}/users/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({
@@ -148,13 +148,14 @@ function patchUserInfo(userData){
 function getUserProfileData(userProfile) {
     let keys = Object.keys(localStorage);
 
-    // check if lokalStorage has key('liUserProfile') 
     if(!keys.includes('liUserProfile')) {
         localStorage.setItem('liUserProfile', JSON.stringify(userProfile));
-        userProfile.forEach(item => {
-            console.log(item)
-        })
-    };
+        console.log(localStorage.getItem('created new liUserProfile', 'liUserProfile'))
+    } else {
+        const previousUserProfile = JSON.parse(localStorage.getItem('liUserProfile'));
+        let addUserProfiles = [...previousUserProfile, userProfile[0]]
+        localStorage.setItem('liUserProfile', JSON.stringify(addUserProfiles))
+    }
 }
 
 if(localStorage.getItem('listOfUsers')) {
