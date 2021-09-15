@@ -42,8 +42,8 @@ function getUserLiByUrl(someFunction) {
 
 
 
-function updateDprecatedProfiles(candidateId) {
-
+async function updateDprecatedProfiles(candidateId) {
+  let cookiesLine = document.cookie;
   let cookies = cookiesLine.split(";");
   let csrfToken = null;
   cookies.forEach(cookie => {
@@ -55,13 +55,9 @@ function updateDprecatedProfiles(candidateId) {
     const fetchConfig = { headers: { 'csrf-token': csrfToken } };
     try {
       const url = `https://www.linkedin.com/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${candidateId}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.FullProfileWithEntities-26`;
-      fetch(url, fetchConfig)
-        .then(function(response) {
-          response.json()
-        })
-        .then(function(data) {
-          console.log('got data from deprecated profile: ', data)
-        })
+      const response = await fetch(url, fetchConfig);
+      const data = await  response.json();
+      console.log('got data from deprecated profile: ', data)
     } catch (error) {
       console.error(error);
     }

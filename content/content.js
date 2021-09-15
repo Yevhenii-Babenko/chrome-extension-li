@@ -34,7 +34,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 function updateDeprecatedUserProfiles(deprecatedUserProfiles) {
-  deprecatedUserProfiles.map(userProfile => {
-    console.log(`${userProfile.firstName} ${userProfile.publicIdentifier}`)
-  })
+  if (deprecatedUserProfiles.length !== 0 && deprecatedUserProfiles) {
+    deprecatedUserProfiles.map(userProfile => {
+      console.log(`${userProfile.firstName} ${userProfile.publicIdentifier}`)
+      let id = userProfile.publicIdentifier;
+      updateDprecatedProfiles(id)
+    })
+  }
 }
