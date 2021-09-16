@@ -18,25 +18,26 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.runtime.onSuspend.addListener(onSuspend)
 function onSuspend() {
-    alert('onSuspend');
+    console.log('...onSuspend');
     getLinkedinTab()
-    // sendMessFromTabs();
 }
 
 function sendMessFromTabs() {
     if (localStorage.length != 0 && localStorage.key('liUserProfile')) {
         const fetchedUsersData = JSON.parse(localStorage.getItem('liUserProfile'))
         chrome.tabs.getAllInWindow(null, function(tabs) {
-            for(let i = 0; i < tabs.length; i++) {
+            if (tabs.length > 0) {
+                for(let i = 0; i < tabs.length; i++) {
         
-                let url = tabs[i].url;
-        
-                if (url.indexOf("linkedin") !== -1) {
-                    console.log('url from getWinds', url)
-                    chrome.tabs.sendMessage(tabs[i].id, {
-                        type: 'retrieved_deprecated_userProfiles',
-                        deprecatedUserProfiles: fetchedUsersData
-                    });
+                    let url = tabs[i].url;
+            
+                    if (url.indexOf("linkedin") !== -1) {
+                        console.log('url from getWinds', url)
+                        chrome.tabs.sendMessage(tabs[i].id, {
+                            type: 'retrieved_deprecated_userProfiles',
+                            deprecatedUserProfiles: fetchedUsersData
+                        });
+                    }
                 }
             }
         })
@@ -49,12 +50,9 @@ function getLinkedinTab() {
             let url = tabs[i].url;
             if (!url.indexOf("linkedin") && url.indexOf("linkedin") == -1) {
                 console.log('url from getWinds', url)
-                chrome.tabs.sendMessage(tabs[i].id, {
-                    type: 'lipage_exist',
-                });
-                return true
-            } else {
                 return false
+            } else {
+                return true
             }
         }
     })
