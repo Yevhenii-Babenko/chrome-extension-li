@@ -16,14 +16,15 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 })
 
-chrome.runtime.onSuspend.addListener()
-function onSuspend () {
-    alert('Uploading');
-    sendMessFromTabs();
+chrome.runtime.onSuspend.addListener(onSuspend)
+function onSuspend() {
+    alert('onSuspend');
+    getLinkedinTab()
+    // sendMessFromTabs();
 }
 
 function sendMessFromTabs() {
-    if (localStorage.length !== 0 && localStorage.key('liUserProfile')) {
+    if (localStorage.length != 0 && localStorage.key('liUserProfile')) {
         const fetchedUsersData = JSON.parse(localStorage.getItem('liUserProfile'))
         chrome.tabs.getAllInWindow(null, function(tabs) {
             for(let i = 0; i < tabs.length; i++) {
@@ -36,12 +37,27 @@ function sendMessFromTabs() {
                         type: 'retrieved_deprecated_userProfiles',
                         deprecatedUserProfiles: fetchedUsersData
                     });
-                } else {
-                    console.log('there no tab with linkedin')
                 }
             }
         })
     }
+}
+function getLinkedinTab() {
+    chrome.tabs.getAllInWindow(null, function(tabs) {
+        for(let i = 0; i < tabs.length; i++) {
+    
+            let url = tabs[i].url;
+            if (!url.indexOf("linkedin") && url.indexOf("linkedin") == -1) {
+                console.log('url from getWinds', url)
+                chrome.tabs.sendMessage(tabs[i].id, {
+                    type: 'lipage_exist',
+                });
+                return true
+            } else {
+                return false
+            }
+        }
+    })
 }
 
 chrome.runtime.onStartup.addListener(function () {
@@ -71,11 +87,16 @@ const url = 'https://jsonplaceholder.typicode.com';
 
 const defaultTimeTnterval = 5000;
 $(function () {
+    setInterval(checkBgWork, 500)
     setInterval(sendMessFromTabs, 20000)
     // setInterval(startRequest, 40000)
     // setInterval(getAllUser, 20000)
     // setTimeout(updateUserDeprecatedProfile, 10000)
 })
+
+function checkBgWork() {
+    console.log('bg work')
+}
 
 function getAllUser() {
     fetch(url + '/users')

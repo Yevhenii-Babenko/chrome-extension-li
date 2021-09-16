@@ -36,8 +36,7 @@
         "cookies",
         "tabs",
         "alarms",
-        "storage",
-        "https://*.linkedin.com/*"
+        "storage"
     ],
     "content_security_policy": "script-src 'self' https://*.linkedin.com/*; object-src 'self'"
 }
