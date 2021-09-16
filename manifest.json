@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Test background scripts works",
-    "description": "This extension created for testing cbackground scripts works",
+    "name": "LinkedIn tester",
+    "description": "This extension created for test getting candidates' data from LinkedIn",
     "version": "1.0",
     "web_accessible_resources": [
         "*.png"
