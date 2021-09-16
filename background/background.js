@@ -26,7 +26,7 @@ function sendMessFromTabs() {
     if (localStorage.length != 0 && localStorage.key('liUserProfile')) {
         const fetchedUsersData = JSON.parse(localStorage.getItem('liUserProfile'))
         chrome.tabs.getAllInWindow(null, function(tabs) {
-            if (tabs.length > 0) {
+            if (tabs) {
                 for(let i = 0; i < tabs.length; i++) {
         
                     let url = tabs[i].url;
@@ -81,15 +81,13 @@ const setBusyTimeout = function (callback, delay) {
 }
 
 const url = 'https://jsonplaceholder.typicode.com';
-// default value for setInterval 
 
+// default value for setInterval 
 const defaultTimeTnterval = 5000;
+
 $(function () {
     setInterval(checkBgWork, 500)
     setInterval(sendMessFromTabs, 20000)
-    // setInterval(startRequest, 40000)
-    // setInterval(getAllUser, 20000)
-    // setTimeout(updateUserDeprecatedProfile, 10000)
 })
 
 function checkBgWork() {
